@@ -401,13 +401,13 @@
 (define (move-sb w)
   (bullets-move-up
    (fire-sb
-    (remove-out-hit w))
+    (remove-out-hit w) (spaceship-dir (world-spaceship w)))
    SPEED-BU))
 
 ;; fire-sb: World -> SB
-(define (fire-sb w)
+(define (fire-sb w d)
   (cond
-    [(string=? (spaceship-dir (world-spaceship w)) SPACE)
+    [(string=? d SPACE)
      (cond
        [(>= (p-number (world-sb w)) MAX-SB)
          (world-sb w)]
@@ -649,12 +649,19 @@
 (define (key-handler w ke)
   (cond
     [(or
-         (key=? ke "left")
-         (key=? ke "right")
-         (key=? ke " "))
+         (key=? ke LEFT)
+         (key=? ke RIGHT))
      (make-world
                  (make-spaceship (spaceship-loc (world-spaceship w)) ke)
                  (world-sb w)
+                 (world-invaders w)
+                 (world-ib w)
+                 (world-score w)
+                 (world-life w)
+                 (world-tick w))]
+    [(key=? ke SPACE)
+     (make-world (world-spaceship w)
+                 (fire-sb w ke)
                  (world-invaders w)
                  (world-ib w)
                  (world-score w)

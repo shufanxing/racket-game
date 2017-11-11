@@ -294,7 +294,8 @@
 ;;;; Function Definition
 (define (world-step w)
     (make-world
-     (move-spaceship w)
+     (make-spaceship (spaceship-loc (move-spaceship w))
+                     "no key")
      (move-sb w)
      (move-invaders w)
      (move-ib w)
@@ -325,22 +326,11 @@
   (cond
     [(spaceship-hit? (spaceship-loc (world-spaceship w)) (world-ib w))
      SPACESHIP]
-    [(out?  (spaceship-loc (world-spaceship w)))
-     (cond
-       [(string=? (spaceship-dir (world-spaceship w)) RIGHT)
-        (make-spaceship
-         (make-posn (- (posn-x (ship-next-loc (world-spaceship w))) 60)
-                    (posn-y (ship-next-loc (world-spaceship w))))
-        
-         "no key")]
-       [(string=? (spaceship-dir (world-spaceship w)) LEFT)
-        (make-spaceship
-         (make-posn (+ (posn-x (ship-next-loc (world-spaceship w))) 60)
-                    (posn-y (ship-next-loc (world-spaceship w))))
-         "no key")]
-       [else (make-spaceship
-           (ship-next-loc (world-spaceship w))
-           (spaceship-dir (world-spaceship w)))])]
+    [(out? (spaceship-loc (world-spaceship w)))
+     (make-spaceship
+      (ship-next-loc (world-spaceship w))
+      "no key")]
+    
     [else (make-spaceship
            (ship-next-loc (world-spaceship w))
            (spaceship-dir (world-spaceship w)))]))
